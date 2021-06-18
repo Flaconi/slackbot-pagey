@@ -36,8 +36,6 @@ class PageySlack:
         """Run slack bot."""
         while True:
             command, channel = self.__parse_bot_commands(self.__slack.rtm_read())
-            print(f"command: {command}")
-            print(f"channel: {channel}")
             if command:
                 self.__handle_command(command, channel)
             time.sleep(RTM_READ_DELAY)

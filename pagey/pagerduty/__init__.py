@@ -2,6 +2,8 @@
 
 
 from typing import List, Dict, Any
+from dateutil import parser
+import datetime
 import json
 import sys
 import requests
@@ -10,9 +12,26 @@ import requests
 def fetch_schedules(token: str) -> List[Dict[str, Any]]:
     """Fetch oncall schedules from Pagerduty API."""
     url = "https://api.pagerduty.com/oncalls"
-    data = __fetch_pagerduty(url, "oncalls", token)
-    oncalls = data
-    return oncalls
+    now = datetime.datetime.now()
+    data = {}
+
+    for item in __fetch_pagerduty(url, "oncalls", token):
+        if item["start"] and item["end"]:
+            date_start = parser.parse(item["start"])
+            date_end = parser.parse(item["end"])
+            if now.timestamp() > date_start.timestamp() and now.timestamp() < date_end.timestamp():
+                team_name = item["escalation_policy"]["summary"]
+                if team_name not in data:
+                    data[team_name] = []
+                data[team_name].append(item["user"]["summary"])
+
+    response = ""
+    for team, names in data.items():
+        response += f"\nteam: {team}\n--------------------------------\n"
+        for name in names:
+            response += f"* {name}\n"
+
+    return response
 
 
 def __fetch_pagerduty(url: str, ret_key: str, token: str) -> List[Dict[str, Any]]:
