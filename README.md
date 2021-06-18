@@ -33,6 +33,15 @@ pip install pagey
 > :exclamation: Requires Python >= 3.6
 
 
+## :computer: Usage
+```bash
+# Export required tokens to your env
+export PAGEY_SLACK_TOKEN="read-write slack token"
+export PAGEY_PD_TOKEN="read-only pagerduty token"
+
+# Run it
+pagey
+```
 
 
 ## :page_facing_up: License

@@ -18,22 +18,24 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         add_help=False,
-        usage="""%(prog)s [options]
+        usage="""%(prog)s
        %(prog)s -v, --version
        %(prog)s -h, --help"""
         % ({"prog": DEF_NAME}),
-        description=DEF_DESC,
+        description=DEF_DESC
+        + """
+
+IMPORTANT:
+  You will have to export PAGEY_SLACK_TOKEN and PAGEY_PD_TOKEN
+  to your environment.
+
+  export PAGEY_SLACK_TOKEN="read-write slack token"
+  export PAGEY_PD_TOKEN="read-only pagerduty token"
+""",
     )
 
-    required = parser.add_argument_group("required arguments")
     misc = parser.add_argument_group("misc arguments")
 
-    required.add_argument(
-        "-p", "--pd-token", type=str, required=True, help="""Pagerduty read-only token."""
-    )
-    required.add_argument(
-        "-s", "--slack-token", type=str, required=True, help="""Slack write token."""
-    )
     misc.add_argument(
         "-v",
         "--version",
