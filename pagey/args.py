@@ -1,9 +1,8 @@
 """Parse command line arguments."""
 
 import argparse
-import sys
 
-from .defaults import DEF_BIN, DEF_NAME, DEF_DESC, DEF_VERSION, DEF_AUTHOR, DEF_GITHUB
+from .defaults import DEF_NAME, DEF_DESC, DEF_VERSION, DEF_GITHUB
 
 
 def _get_version() -> str:

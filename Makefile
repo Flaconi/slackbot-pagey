@@ -7,7 +7,7 @@ endif
 # Can be changed
 # -------------------------------------------------------------------------------------------------
 # This can be adjusted
-PYTHON_VERSION = 3.6
+PYTHON_VERSION = 3.8
 
 
 # -------------------------------------------------------------------------------------------------
@@ -186,7 +186,11 @@ _code-mypy:
 	@echo "# -------------------------------------------------------------------- #"
 	@echo "# Check mypy"
 	@echo "# -------------------------------------------------------------------- #"
-	docker run --rm $$(tty -s && echo "-it" || echo) -v ${PWD}:/data cytopia/mypy --config-file setup.cfg $(SRC)/
+	docker run --rm $$(tty -s && echo "-it" || echo) -v ${PWD}:/data --entrypoint=sh cytopia/mypy -c ' \
+		python -m pip install -r requirements.txt \
+		&& yes | mypy --config-file setup.cfg --install-types $(SRC)/ 2>&1 >/dev/null \
+		&& mypy --config-file setup.cfg $(SRC)/ \
+		'
 
 
 # -------------------------------------------------------------------------------------------------
