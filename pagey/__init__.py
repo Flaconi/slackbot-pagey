@@ -4,7 +4,10 @@ import os
 
 from .args import *
 from .pagerduty import *
+from .defaults import DEF_NAME, DEF_DESC, DEF_VERSION, DEF_GITHUB
 from .slack import *
+
+COMMANDS = ["oncall", "info"]
 
 
 def main() -> None:
@@ -50,7 +53,11 @@ def main() -> None:
                         )
                 response += "\n"
             return response
-        return "Available commands: oncall"
+        # [Command: info] Report some info
+        if command.startswith("info"):
+            return f"{DEF_NAME} ({DEF_VERSION}) - {DEF_DESC}\nFind me here: {DEF_GITHUB}\n"
+
+        return "Available commands: " + ", ".join(COMMANDS)
 
     # Connect to Slack (RTM mode)
     slack = PageySlack(SLACK_TOKEN, commandCallback)
