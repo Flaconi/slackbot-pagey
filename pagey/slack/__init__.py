@@ -7,25 +7,27 @@ import sys
 
 from slackclient import SlackClient  # type: ignore
 
-RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
-DEFAULT_COMMAND = "oncall"
-
 
 class PageySlack:
     """Pagey Slack Class."""
+
+    RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
 
     # --------------------------------------------------------------------------
     # Contrcutor
     # --------------------------------------------------------------------------
     def __init__(self, token: str, commandCallback: Callable[[str], str]) -> None:
+        """Constructor."""
         self.__token = token
         self.__slack = SlackClient(token)
         self.__bot_id = None
         self.__commandCallback = commandCallback
 
+    # --------------------------------------------------------------------------
+    # Public Functions
+    # --------------------------------------------------------------------------
     def connect(self) -> bool:
-        """Constructor."""
-        # Connect to slack
+        """Connect to Slack and return True on success, otherwise False."""
         if self.__slack.rtm_connect(with_team_state=False):
             # Read bot's user ID by calling Web API method `auth.test`
             self.__bot_id = self.__slack.api_call("auth.test")["user_id"]
@@ -33,25 +35,23 @@ class PageySlack:
         return False
 
     def run(self) -> bool:
-        """Run slack bot."""
+        """Run this Slack bot and wait endlessly to evaluate Slack events."""
         while True:
             command, channel = self.__parse_bot_commands(self.__slack.rtm_read())
             if command:
                 self.__handle_command(command, channel)
-            time.sleep(RTM_READ_DELAY)
+            time.sleep(self.RTM_READ_DELAY)
 
+    # --------------------------------------------------------------------------
+    # Private Functions
+    # --------------------------------------------------------------------------
     def __handle_command(self, command: str, channel: Optional[str]) -> None:
         """Executes bot command if the command is known."""
-        # Default response is help text for the user
-        default_response = "Not sure what you mean. Try *{}*.".format(DEFAULT_COMMAND)
-
         # The callback will take care about setting the response for slack
         response = self.__commandCallback(command)
 
         # Sends the response back to the channel
-        self.__slack.api_call(
-            "chat.postMessage", channel=channel, text=response or default_response
-        )
+        self.__slack.api_call("chat.postMessage", channel=channel, text=response)
 
     def __parse_bot_commands(
         self, slack_events: List[Dict[str, Any]]

@@ -16,13 +16,16 @@ def main() -> None:
     try:
         SLACK_TOKEN = os.environ["PAGEY_SLACK_TOKEN"]
     except KeyError:
-        print("Error, env variable 'PAGEY_SLACK_TOKEN' not set", file=sys.stdout)
+        print("Error, env variable 'PAGEY_SLACK_TOKEN' not set", file=sys.stderr)
         sys.exit(1)
     try:
         PD_TOKEN = os.environ["PAGEY_PD_TOKEN"]
     except KeyError:
-        print("Error, env variable 'PAGEY_PD_TOKEN' not set", file=sys.stdout)
+        print("Error, env variable 'PAGEY_PD_TOKEN' not set", file=sys.stderr)
         sys.exit(1)
+
+    # Initialize Pagerduty module
+    pagerduty = PageyPD(PD_TOKEN)
 
     # Slack command callback
     # Add more commands into the if condition when required.
@@ -30,7 +33,7 @@ def main() -> None:
         """This is a callback function for slack to evaluate response based on given command."""
         # [Command: oncall] Get Pagerduty schedules
         if command.startswith("oncall"):
-            schedules = fetch_schedules(PD_TOKEN)
+            schedules = pagerduty.get_schedules()
             response = ""
             for team, users in schedules.items():
                 response += f"*{team}*\n"
