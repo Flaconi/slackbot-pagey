@@ -1,10 +1,10 @@
 """Pagerduty module."""
 
-
 from typing import List, Dict, Any
 import datetime
 import json
 import sys
+
 from dateutil import parser
 import requests
 
@@ -27,6 +27,7 @@ def fetch_schedules(token: str) -> Dict[str, Any]:
                     {
                         "name": item["user"]["summary"],
                         "level": item["escalation_level"],
+                        "until": f"{date_end:%Y-%m-%d}",
                     }
                 )
     return data

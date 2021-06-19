@@ -32,7 +32,7 @@ def main() -> None:
         # Sort by escalation level
         users.sort(key=lambda s: s["level"])
         for user in users:
-            response += f"* lvl: {user['level']} - {user['name']}\n"
+            response += f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
         response += "\n"
 
     # Slack command callback
