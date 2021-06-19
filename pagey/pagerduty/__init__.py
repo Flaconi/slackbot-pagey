@@ -2,10 +2,10 @@
 
 
 from typing import List, Dict, Any
-from dateutil import parser
 import datetime
 import json
 import sys
+from dateutil import parser
 import requests
 
 
@@ -13,7 +13,7 @@ def fetch_schedules(token: str) -> Dict[str, Any]:
     """Fetch oncall schedules from Pagerduty API."""
     url = "https://api.pagerduty.com/oncalls"
     now = datetime.datetime.now()
-    data = {}
+    data = {}  # type: Dict[str, Any]
 
     for item in __fetch_pagerduty(url, "oncalls", token):
         if item["start"] and item["end"]:
@@ -23,10 +23,12 @@ def fetch_schedules(token: str) -> Dict[str, Any]:
                 team_name = item["escalation_policy"]["summary"]
                 if team_name not in data:
                     data[team_name] = []
-                data[team_name].append({
-                    "name": item["user"]["summary"],
-                    "level": item["escalation_level"],
-                })
+                data[team_name].append(
+                    {
+                        "name": item["user"]["summary"],
+                        "level": item["escalation_level"],
+                    }
+                )
     return data
 
 

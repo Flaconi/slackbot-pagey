@@ -1,11 +1,11 @@
 """Slack module."""
 
-from typing import Tuple, Optional, List, Dict, Any
+from typing import Tuple, Optional, List, Dict, Any, Callable
 import time
 import re
 import sys
 
-from slackclient import SlackClient
+from slackclient import SlackClient  # type: ignore
 
 RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
 DEFAULT_COMMAND = "oncall"
@@ -17,7 +17,7 @@ class PageySlack:
     # --------------------------------------------------------------------------
     # Contrcutor
     # --------------------------------------------------------------------------
-    def __init__(self, token: str, commandCallback) -> None:
+    def __init__(self, token: str, commandCallback: Callable[[str], str]) -> None:
         self.__token = token
         self.__slack = SlackClient(token)
         self.__bot_id = None
@@ -40,7 +40,7 @@ class PageySlack:
                 self.__handle_command(command, channel)
             time.sleep(RTM_READ_DELAY)
 
-    def __handle_command(self, command: str, channel: str):
+    def __handle_command(self, command: str, channel: Optional[str]) -> None:
         """Executes bot command if the command is known."""
         # Default response is help text for the user
         default_response = "Not sure what you mean. Try *{}*.".format(DEFAULT_COMMAND)
