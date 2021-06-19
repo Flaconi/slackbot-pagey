@@ -24,7 +24,16 @@ def main() -> None:
 
     # Initialize pagerduty
     # Get schedules
-    response = fetch_schedules(PD_TOKEN)
+    schedules = fetch_schedules(PD_TOKEN)
+    response = ""
+    print(schedules)
+    for team, users in schedules.items():
+        response += f"*{team}*\n"
+        # Sort by escalation level
+        users.sort(key=lambda s: s["level"])
+        for user in users:
+            response += f"* lvl: {user['level']} - {user['name']}\n"
+        response += "\n"
 
     # Slack command callback
     def commandCallback(command: str) -> str:

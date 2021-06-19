@@ -9,7 +9,7 @@ import sys
 import requests
 
 
-def fetch_schedules(token: str) -> List[Dict[str, Any]]:
+def fetch_schedules(token: str) -> Dict[str, Any]:
     """Fetch oncall schedules from Pagerduty API."""
     url = "https://api.pagerduty.com/oncalls"
     now = datetime.datetime.now()
@@ -23,15 +23,11 @@ def fetch_schedules(token: str) -> List[Dict[str, Any]]:
                 team_name = item["escalation_policy"]["summary"]
                 if team_name not in data:
                     data[team_name] = []
-                data[team_name].append(item["user"]["summary"])
-
-    response = ""
-    for team, names in data.items():
-        response += f"\nteam: {team}\n--------------------------------\n"
-        for name in names:
-            response += f"* {name}\n"
-
-    return response
+                data[team_name].append({
+                    "name": item["user"]["summary"],
+                    "level": item["escalation_level"],
+                })
+    return data
 
 
 def __fetch_pagerduty(url: str, ret_key: str, token: str) -> List[Dict[str, Any]]:
