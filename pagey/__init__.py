@@ -30,10 +30,15 @@ def main() -> None:
     # Initialize Pagerduty module
     pagerduty = PageyPD(PD_TOKEN)
 
-    # Slack command callback
-    # Add more commands into the if condition when required.
     def commandCallback(command: str) -> str:
-        """This is a callback function for slack to evaluate response based on given command."""
+        """This is a callback function for Slack to evaluate response based on given command.
+
+        Args:
+            command (str): the command/message after the bot mention (e.g.: @pagey <command>).
+
+        Returns:
+            str: The reply to be sent to Slack.
+        """
         # [Command: oncall] Get Pagerduty schedules
         if command.startswith("oncall"):
             schedules = pagerduty.get_schedules()
