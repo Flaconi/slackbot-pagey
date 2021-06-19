@@ -150,6 +150,7 @@ code: _code-pydocstyle
 code: _code-pylint
 code: _code-black
 code: _code-mypy
+code: _code-bandit
 
 .PHONY: _code-pycodestyle
 _code-pycodestyle:
@@ -180,6 +181,13 @@ _code-black:
 	@echo "# Check Python Black"
 	@echo "# -------------------------------------------------------------------- #"
 	docker run --rm $$(tty -s && echo "-it" || echo) -v ${PWD}:/data cytopia/black -l 100 --check --diff $(SRC)/
+
+.PHONY: _code-bandit
+_code-bandit:
+	@echo "# -------------------------------------------------------------------- #"
+	@echo "# Check Python Security with Bandit"
+	@echo "# -------------------------------------------------------------------- #"
+	docker run --rm $$(tty -s && echo "-it" || echo) -v ${PWD}:/data cytopia/bandit -r $(SRC)
 
 .PHONY: _code-mypy
 _code-mypy:

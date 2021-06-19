@@ -18,6 +18,7 @@
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/testing/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=testing)
 
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/black/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=black)
+[![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/bandit/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=bandit)
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/mypy/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=mypy)
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/pylint/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=pylint)
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/pycode/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=pycode)
