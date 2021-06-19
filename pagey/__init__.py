@@ -37,7 +37,14 @@ def main() -> None:
                 # Sort by escalation level
                 users.sort(key=lambda s: s["level"])
                 for user in users:
-                    response += f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
+                    if int(user["level"]) == 1:
+                        response += (
+                            f"* [lvl: *{user['level']}* -> {user['until']}] *{user['name']}*\n"
+                        )
+                    else:
+                        response += (
+                            f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
+                        )
                 response += "\n"
             return response
         return "Available commands: oncall"
