@@ -4,11 +4,11 @@
 
 
 [![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![PyPI](https://img.shields.io/pypi/v/slackbot-pagey)](https://pypi.org/project/slackbot-pagey/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/slackbot-pagey)](https://pypi.org/project/slackbot-pagey/)
-[![PyPI - Format](https://img.shields.io/pypi/format/slackbot-pagey)](https://pypi.org/project/slackbot-pagey/)
-[![PyPI - Implementation](https://img.shields.io/pypi/implementation/slackbot-pagey)](https://pypi.org/project/slackbot-pagey/)
-[![PyPI - License](https://img.shields.io/pypi/l/slackbot-pagey)](https://pypi.org/project/slackbot-pagey/)
+[![PyPI](https://img.shields.io/pypi/v/pagey)](https://pypi.org/project/pagey/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pagey)](https://pypi.org/project/pagey/)
+[![PyPI - Format](https://img.shields.io/pypi/format/pagey)](https://pypi.org/project/pagey/)
+[![PyPI - Implementation](https://img.shields.io/pypi/implementation/pagey)](https://pypi.org/project/pagey/)
+[![PyPI - License](https://img.shields.io/pypi/l/pagey)](https://pypi.org/project/pagey/)
 
 
 ## :hourglass: Pipelines
