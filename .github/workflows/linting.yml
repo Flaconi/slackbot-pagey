@@ -1,0 +1,121 @@
+---
+
+###
+### Lints all generic and json files in the whole git repository
+###
+
+name: linting
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: False
+      matrix:
+        target:
+          - Linting
+    name: "[ ${{ matrix.target }} ]"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Lint files
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make _lint-files
+        env:
+          RETRIES: 20
+          PAUSE: 10
+
+      - name: "Check version"
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make _lint-version
+        env:
+          RETRIES: 20
+          PAUSE: 10
+
+      - name: "Check binary name"
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make _lint-bin-name
+        env:
+          RETRIES: 20
+          PAUSE: 10
+
+      - name: "Check package name"
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make _lint-pkg-name
+        env:
+          RETRIES: 20
+          PAUSE: 10
+
+      - name: "Check description"
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make _lint-description
+        env:
+          RETRIES: 20
+          PAUSE: 10

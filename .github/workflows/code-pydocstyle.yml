@@ -1,0 +1,45 @@
+---
+
+###
+### Code style
+###
+
+name: pydoc
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: False
+      matrix:
+        target:
+          - pydocstyle
+    name: "[ ${{ matrix.target }} ]"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: "${{ matrix.target }}"
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make _code-${{ matrix.target }}
+        env:
+          RETRIES: 20
+          PAUSE: 10

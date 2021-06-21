@@ -1,0 +1,50 @@
+---
+
+###
+### Lints all generic and json files in the whole git repository
+###
+
+name: testing
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: False
+      matrix:
+        version:
+          - '3.6'
+          - '3.7'
+          - '3.8'
+          - '3.9'
+
+    name: "[${{ matrix.version }}]"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Build source distribution
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make test PYTHON_VERSION=${version}
+        env:
+          RETRIES: 20
+          PAUSE: 10
+          version: ${{ matrix.version }}

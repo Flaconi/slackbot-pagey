@@ -18,6 +18,7 @@
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/testing/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=testing)
 
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/black/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=black)
+[![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/bandit/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=bandit)
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/mypy/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=mypy)
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/pylint/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=pylint)
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/pycode/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=pycode)
@@ -33,6 +34,15 @@ pip install pagey
 > :exclamation: Requires Python >= 3.6
 
 
+## :computer: Usage
+```bash
+# Export required tokens to your env
+export PAGEY_SLACK_TOKEN="read-write slack token"
+export PAGEY_PD_TOKEN="read-only pagerduty token"
+
+# Run it
+pagey
+```
 
 
 ## :page_facing_up: License
