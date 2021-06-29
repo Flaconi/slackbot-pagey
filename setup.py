@@ -11,7 +11,7 @@ with open("requirements.txt", "r") as fp:
 
 setup(
     name="pagey",
-    version="0.0.1",
+    version="0.0.2",
     packages=[
         "pagey",
         "pagey.pagerduty",
