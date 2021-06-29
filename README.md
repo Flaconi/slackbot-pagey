@@ -25,7 +25,6 @@
 [![Build Status](https://github.com/Flaconi/slackbot-pagey/workflows/pydoc/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions?workflow=pydoc)
 
 
-
 ## :tada: Install
 ```bash
 pip install pagey
@@ -44,6 +43,7 @@ export PAGEY_PD_TOKEN="read-only pagerduty token"
 pagey
 ```
 
+
 ## Docker
 
 [![docker](https://github.com/Flaconi/slackbot-pagey/actions/workflows/docker.yml/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions/workflows/docker.yml)
@@ -60,6 +60,11 @@ export PAGEY_PD_TOKEN="read-only pagerduty token"
 # Run it
 docker run --rm -d -e PAGEY_SLACK_TOKEN -e PAGEY_PD_TOKEN flaconi/slackbot-pagey
 ```
+
+
+## Slack configuration
+
+See [doc/](doc/) directory for how to configure Slack
 
 
 ## :page_facing_up: License
