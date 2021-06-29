@@ -44,6 +44,23 @@ export PAGEY_PD_TOKEN="read-only pagerduty token"
 pagey
 ```
 
+## Docker
+
+[![docker](https://github.com/Flaconi/slackbot-pagey/actions/workflows/docker.yml/badge.svg)](https://github.com/Flaconi/slackbot-pagey/actions/workflows/docker.yml)
+
+Docker image is available here:
+
+[![Docker hub](http://dockeri.co/image/flaconi/slackbot-pagey?&kill_cache=1)](https://hub.docker.com/r/flaconi/slackbot-pagey)
+
+```bash
+# Export required tokens to your env
+export PAGEY_SLACK_TOKEN="read-write slack token"
+export PAGEY_PD_TOKEN="read-only pagerduty token"
+
+# Run it
+docker run --rm -d -e PAGEY_SLACK_TOKEN -e PAGEY_PD_TOKEN flaconi/slackbot-pagey
+```
+
 
 ## :page_facing_up: License
 
