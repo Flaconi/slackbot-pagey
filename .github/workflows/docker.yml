@@ -1,0 +1,88 @@
+---
+
+###
+### Build Docker image
+###
+name: docker
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: docker
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Set variables
+        run: |
+          # This can be the branch name (master, release-) or a tag name
+          TAG="$( echo "${GITHUB_REF}" | cut -d / -f 3 )"
+          if [ "${TAG}" = "master" ]; then
+            TAG="latest"
+          fi
+          echo "TAG=${TAG}"
+          echo "TAG=${TAG}" >> ${GITHUB_ENV}
+
+      # ------------------------------------------------------------
+      # Build
+      # ------------------------------------------------------------
+      - name: Build Docker image
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+          retry make docker-build TAG=${TAG}
+        env:
+          RETRIES: 20
+          PAUSE: 10
+
+      - name: List images
+        run: |
+            docker image ls
+
+      # ------------------------------------------------------------
+      # Deploy
+      # ------------------------------------------------------------
+      - name: Publish images (only repo owner)
+        run: |
+          retry() {
+            for n in $(seq ${RETRIES}); do
+              echo "[${n}/${RETRIES}] ${*}";
+              if eval "${*}"; then
+                echo "[SUCC] ${n}/${RETRIES}";
+                return 0;
+              fi;
+              sleep ${PAUSE};
+              echo "[FAIL] ${n}/${RETRIES}";
+            done;
+            return 1;
+          }
+
+          # Login and Push
+          retry make docker-login DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}
+          retry make docker-push TAG=${TAG}
+        env:
+          RETRIES: 20
+          PAUSE: 10
+        # https://help.github.com/en/github/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#functions
+        if: github.event.pull_request.base.repo.id == github.event.pull_request.head.repo.id
+            && (
+              (github.event_name == 'schedule' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')))
+              ||
+              (github.event_name == 'push'     && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')))
+              ||
+              (github.event_name == 'push'     && startsWith(github.ref, 'refs/heads/release-'))
+            )

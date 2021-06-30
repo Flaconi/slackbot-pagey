@@ -21,6 +21,11 @@ VENV = venv
 BIN  = pagey
 SRC  = pagey
 
+
+IMAGE = flaconi/slackbot-pagey
+TAG = latest
+
+
 FL_VERSION = 0.4
 FL_IGNORES = .git/,.github/,$(NAME).egg-info,.mypy_cache/,$(ENV)
 
@@ -302,6 +307,30 @@ deploy: _build-check_python_package
 		python:$(PYTHON_VERSION)-slim \
 		sh -c "pip install twine \
 		&& twine upload dist/*"
+
+
+
+
+# -------------------------------------------------------------------------------------------------
+# Docker Targets
+# -------------------------------------------------------------------------------------------------
+docker-login:
+	@yes | docker login --username $(DOCKERHUB_USERNAME) --password $(DOCKERHUB_PASSWORD)
+
+docker-build:
+	docker build $(NO_CACHE) \
+		--label "org.opencontainers.image.created"="$$(date --rfc-3339=s)" \
+		--label "org.opencontainers.image.revision"="$$(git rev-parse HEAD)" \
+		--label "org.opencontainers.image.version"="${VERSION}" \
+		-t $(IMAGE):$(TAG) .
+
+docker-push:
+	docker push $(IMAGE):$(TAG)
+
+docker-pull-base-image:
+	@grep -E '^\s*FROM' Dockerfile \
+		| sed -e 's/^FROM//g' -e 's/[[:space:]]*as[[:space:]]*.*$$//g' \
+		| xargs -n1 docker pull;
 
 
 # -------------------------------------------------------------------------------------------------
