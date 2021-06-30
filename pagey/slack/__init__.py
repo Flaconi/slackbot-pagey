@@ -18,7 +18,6 @@ class PageySlack:
     # --------------------------------------------------------------------------
     def __init__(self, token: str, commandCallback: Callable[[str], str]) -> None:
         """Constructor."""
-        self.__token = token
         self.__slack = SlackClient(token)
         self.__bot_id = None
         self.__commandCallback = commandCallback
