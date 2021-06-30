@@ -4,6 +4,6 @@
 DEF_BIN = "pagey"
 DEF_NAME = "pagey"
 DEF_DESC = "Pagey is a Pagerduty slack bot."
-DEF_VERSION = "0.0.2"
+DEF_VERSION = "0.0.3"
 DEF_AUTHOR = "cytopia"
 DEF_GITHUB = "https://github.com/Flaconi/slackbot-pagey"
