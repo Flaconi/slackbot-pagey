@@ -8,7 +8,8 @@ endif
 # -------------------------------------------------------------------------------------------------
 # This can be adjusted
 PYTHON_VERSION = 3.8
-
+PYLINT_VERSION = latest-0.6
+MYPY_VERSION   = latest-0.4
 
 # -------------------------------------------------------------------------------------------------
 # Default configuration
@@ -176,9 +177,13 @@ _code-pylint:
 	@echo "# -------------------------------------------------------------------- #"
 	@echo "# Check pylint"
 	@echo "# -------------------------------------------------------------------- #"
-	docker run --rm $$(tty -s && echo "-it" || echo) -v $(PWD):/data --entrypoint=sh cytopia/pylint -c '\
-		pip3 install -r requirements.txt \
-		&& pylint --rcfile=setup.cfg $(SRC)/'
+	docker run --rm $$(tty -s && echo "-it" || echo) \
+	  --network=host \
+	  -v $(PWD):/data \
+	  --entrypoint=sh \
+	  cytopia/pylint:$(PYLINT_VERSION) -c '\
+      pip3 install -r requirements.txt \
+      && pylint --rcfile=setup.cfg $(SRC)/'
 
 .PHONY: _code-black
 _code-black:
@@ -199,11 +204,15 @@ _code-mypy:
 	@echo "# -------------------------------------------------------------------- #"
 	@echo "# Check mypy"
 	@echo "# -------------------------------------------------------------------- #"
-	docker run --rm $$(tty -s && echo "-it" || echo) -v ${PWD}:/data --entrypoint=sh cytopia/mypy -c ' \
-		python -m pip install -r requirements.txt \
-		&& yes | mypy --config-file setup.cfg --install-types $(SRC)/ 2>&1 >/dev/null \
-		&& mypy --config-file setup.cfg $(SRC)/ \
-		'
+	docker run --rm $$(tty -s && echo "-it" || echo) \
+	  --network=host \
+	  -v ${PWD}:/data \
+	  --entrypoint=sh \
+	  cytopia/mypy:$(MYPY_VERSION) -c ' \
+      python -m pip install -r requirements.txt \
+      && yes | mypy --config-file setup.cfg --install-types $(SRC)/ 2>&1 >/dev/null \
+      && mypy --config-file setup.cfg $(SRC)/ \
+      '
 
 
 # -------------------------------------------------------------------------------------------------
