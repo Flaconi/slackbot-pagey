@@ -40,7 +40,7 @@ RUN set -eux \
 	&& find /usr/lib/ -name '*.pyc' -print0 | xargs -0 -n1 rm -f \
 	&& find /usr/lib/ -name '__pycache__' -print0 | xargs -0 -n1 rm -rf
 
-COPY --from=builder /usr/local/lib/python3.9/site-packages/ /usr/lib/python3.9/site-packages/
+COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/lib/python3.12/site-packages/
 COPY --from=builder /usr/local/bin/pagey /usr/bin/pagey
 
 USER pagey
