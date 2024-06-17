@@ -182,7 +182,8 @@ _code-pylint:
 	  -v $(PWD):/data \
 	  --entrypoint=sh \
 	  cytopia/pylint:$(PYLINT_VERSION) -c '\
-      pip3 install -r requirements.txt \
+	    apk add py3-pip \
+      && pip3 install -r requirements.txt \
       && pylint --rcfile=setup.cfg $(SRC)/'
 
 .PHONY: _code-black
@@ -223,6 +224,7 @@ test:
 	@echo "Check Python package"
 	docker run \
 		--rm \
+    --network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
