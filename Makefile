@@ -7,9 +7,9 @@ endif
 # Can be changed
 # -------------------------------------------------------------------------------------------------
 # This can be adjusted
-PYTHON_VERSION = 3.8
-PYLINT_VERSION = latest-0.6
-MYPY_VERSION   = latest-0.4
+PYTHON_VERSION = 3.12
+PYLINT_VERSION = latest-0.8
+MYPY_VERSION   = latest-py3.10
 
 # -------------------------------------------------------------------------------------------------
 # Default configuration
@@ -27,7 +27,7 @@ IMAGE = flaconi/slackbot-pagey
 TAG = latest
 
 
-FL_VERSION = 0.4
+FL_VERSION = latest-0.8
 FL_IGNORES = .git/,.github/,$(NAME).egg-info,.mypy_cache/,$(ENV)
 
 
@@ -182,7 +182,8 @@ _code-pylint:
 	  -v $(PWD):/data \
 	  --entrypoint=sh \
 	  cytopia/pylint:$(PYLINT_VERSION) -c '\
-      pip3 install -r requirements.txt \
+	    apk add py3-pip \
+      && pip3 install -r requirements.txt \
       && pylint --rcfile=setup.cfg $(SRC)/'
 
 .PHONY: _code-black
@@ -210,7 +211,7 @@ _code-mypy:
 	  --entrypoint=sh \
 	  cytopia/mypy:$(MYPY_VERSION) -c ' \
       python -m pip install -r requirements.txt \
-      && yes | mypy --config-file setup.cfg --install-types $(SRC)/ 2>&1 >/dev/null \
+      && python -m pip install types-python-dateutil types-requests \
       && mypy --config-file setup.cfg $(SRC)/ \
       '
 
@@ -223,6 +224,7 @@ test:
 	@echo "Check Python package"
 	docker run \
 		--rm \
+    --network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \

@@ -18,10 +18,7 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         add_help=False,
-        usage="""%(prog)s
-       %(prog)s -v, --version
-       %(prog)s -h, --help"""
-        % ({"prog": DEF_NAME}),
+        usage=(f"{DEF_NAME} [option]\n" f"{DEF_NAME} -v, --version\n" f"{DEF_NAME} -h, --help\n"),
         description=DEF_DESC
         + """
 
