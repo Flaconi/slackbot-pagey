@@ -7,9 +7,9 @@ endif
 # Can be changed
 # -------------------------------------------------------------------------------------------------
 # This can be adjusted
-PYTHON_VERSION = 3.8
-PYLINT_VERSION = latest-0.6
-MYPY_VERSION   = latest-0.4
+PYTHON_VERSION = 3.12
+PYLINT_VERSION = latest-0.8
+MYPY_VERSION   = latest-py3.10
 
 # -------------------------------------------------------------------------------------------------
 # Default configuration
@@ -27,7 +27,7 @@ IMAGE = flaconi/slackbot-pagey
 TAG = latest
 
 
-FL_VERSION = 0.4
+FL_VERSION = latest-0.8
 FL_IGNORES = .git/,.github/,$(NAME).egg-info,.mypy_cache/,$(ENV)
 
 

@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.13 as builder
+FROM python:3.12-alpine3.20 as builder
 
 COPY ./ /data
 RUN set -eux \
@@ -11,8 +11,8 @@ RUN set -eux \
 	&& find /usr/lib/ -name '*.pyc' -print0 | xargs -0 -n1 rm -rf
 
 
-# 3.14 uses Python 3.9 as default
-FROM alpine:3.14 as production
+# 3.20 uses Python 3.12 as default
+FROM alpine:3.20 as production
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 #LABEL "org.opencontainers.image.created"=""
 #LABEL "org.opencontainers.image.version"=""
