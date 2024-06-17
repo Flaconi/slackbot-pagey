@@ -210,7 +210,7 @@ _code-mypy:
 	  --entrypoint=sh \
 	  cytopia/mypy:$(MYPY_VERSION) -c ' \
       python -m pip install -r requirements.txt \
-      && yes | mypy --config-file setup.cfg --install-types $(SRC)/ 2>&1 >/dev/null \
+      && python -m pip install types-python-dateutil types-requests \
       && mypy --config-file setup.cfg $(SRC)/ \
       '
 
