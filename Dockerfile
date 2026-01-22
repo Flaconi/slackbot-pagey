@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.20 AS builder
+FROM python:3.14-alpine3.23 AS builder
 
 # Ensure pip, setuptools, wheel and build are available for building and installing the package
 RUN set -eux \
@@ -17,8 +17,8 @@ RUN set -eux \
 	&& find /usr/lib/ -name '*.pyc' -print0 | xargs -0 -n1 rm -rf
 
 
-# 3.20 uses Python 3.12 as default
-FROM alpine:3.20 AS production
+# 3.23 uses Python 3.14 as default
+FROM alpine:3.23 AS production
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 #LABEL "org.opencontainers.image.created"=""
 #LABEL "org.opencontainers.image.version"=""
