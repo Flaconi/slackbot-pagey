@@ -255,7 +255,7 @@ _build-source_dist:
 		-w /data \
 		-u $$(id -u):$$(id -g) \
 		python:$(PYTHON_VERSION)-alpine \
-		python setup.py sdist
+		sh -c "python -m pip install --upgrade pip build && python -m build --sdist"
 
 .PHONY: _build_binary_dist
 _build-binary_dist:
@@ -268,11 +268,11 @@ _build-binary_dist:
 		-w /data \
 		-u $$(id -u):$$(id -g) \
 		python:$(PYTHON_VERSION)-alpine \
-		python setup.py bdist_wheel --universal
+		sh -c "python -m pip install --upgrade pip build && python -m build --wheel"
 
 .PHONY: _build_python_package
 _build-python_package:
-	@echo "Build Python package"
+	@echo "Build Python package (sdist + wheel)"
 	docker run \
 		--rm \
 	  --network host \
@@ -281,7 +281,7 @@ _build-python_package:
 		-w /data \
 		-u $$(id -u):$$(id -g) \
 		python:$(PYTHON_VERSION)-alpine \
-		python setup.py build
+		sh -c "python -m pip install --upgrade pip build && python -m build"
 
 .PHONY: _build_check_python_package
 _build-check_python_package:
@@ -297,18 +297,18 @@ _build-check_python_package:
 		&& twine check dist/*"
 
 clean:
-	rm -rf build/
-	rm -rf dist/
-	rm -rf $(NAME).egg-info
-	find . -type f -name '*.pyc' -exec rm -f {} \;
-	find . -type d -name '__pycache__' -prune -exec rmdir {} \;
+	- rm -rf build/
+	- rm -rf dist/
+	- rm -rf $(NAME).egg-info
+	- find . -type f -name '*.pyc' -exec rm -f {} \; || true
+	- find . -type d -name '__pycache__' -prune -exec rmdir {} \; || true
 
 .PHONY: venv
 venv:
 	python3 -m venv $(VENV)
 	@echo source $(VENV)/bin/activate
-	@echo python3 setup.py install
-
+	@echo python -m pip install --upgrade pip build
+	@echo python -m build
 
 # -------------------------------------------------------------------------------------------------
 # Publish Targets
