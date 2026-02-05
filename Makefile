@@ -254,6 +254,7 @@ _build-source_dist:
 		-v $(PWD):/data \
 		-w /data \
 		-u $$(id -u):$$(id -g) \
+		-e HOME=/tmp \
 		python:$(PYTHON_VERSION)-alpine \
 		sh -c "python -m pip install --upgrade pip build && python -m build --sdist"
 
@@ -267,6 +268,7 @@ _build-binary_dist:
 		-v $(PWD):/data \
 		-w /data \
 		-u $$(id -u):$$(id -g) \
+		-e HOME=/tmp \
 		python:$(PYTHON_VERSION)-alpine \
 		sh -c "python -m pip install --upgrade pip build && python -m build --wheel"
 
@@ -280,6 +282,7 @@ _build-python_package:
 		-v $(PWD):/data \
 		-w /data \
 		-u $$(id -u):$$(id -g) \
+		-e HOME=/tmp \
 		python:$(PYTHON_VERSION)-alpine \
 		sh -c "python -m pip install --upgrade pip build && python -m build"
 
