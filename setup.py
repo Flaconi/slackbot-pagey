@@ -11,7 +11,7 @@ with open("requirements.txt", "r") as fp:
 
 setup(
     name="pagey",
-    version="0.2.0",
+    version="0.3.0",
     packages=[
         "pagey",
         "pagey.pagerduty",
@@ -36,7 +36,7 @@ setup(
         "Source Code": "https://github.com/Flaconi/slackbot-pagey",
         "Bug Tracker": "https://github.com/Flaconi/slackbot-pagey",
     },
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     classifiers=[
         # https://pypi.org/classifiers/
         #
@@ -53,11 +53,11 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         # Project topics

@@ -31,7 +31,7 @@
 pip install pagey
 ```
 
-> :exclamation: Requires Python >= 3.8
+> :exclamation: Requires Python >= 3.10
 
 
 ## :computer: Usage
@@ -72,4 +72,4 @@ See [doc/](doc/) directory for how to configure Slack
 
 **[MIT License](LICENSE.txt)**
 
-Copyright (c) 2021-2024 **[Flaconi](https://github.com/Flaconi)**
+Copyright (c) 2021-2026 **[Flaconi](https://github.com/Flaconi)**

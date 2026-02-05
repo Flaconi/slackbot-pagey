@@ -7,7 +7,7 @@ endif
 # Can be changed
 # -------------------------------------------------------------------------------------------------
 # This can be adjusted
-PYTHON_VERSION = 3.12
+PYTHON_VERSION = 3.14
 PYLINT_VERSION = latest-0.8
 MYPY_VERSION   = latest-py3.10
 
