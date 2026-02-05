@@ -178,7 +178,7 @@ _code-pylint:
 	@echo "# Check pylint"
 	@echo "# -------------------------------------------------------------------- #"
 	docker run --rm $$(tty -s && echo "-it" || echo) \
-	  --network=host \
+		--network=host \
 	  -v $(PWD):/data \
 	  --entrypoint=sh \
 	  cytopia/pylint:$(PYLINT_VERSION) -c '\
@@ -206,7 +206,7 @@ _code-mypy:
 	@echo "# Check mypy"
 	@echo "# -------------------------------------------------------------------- #"
 	docker run --rm $$(tty -s && echo "-it" || echo) \
-	  --network=host \
+		--network=host \
 	  -v ${PWD}:/data \
 	  --entrypoint=sh \
 	  cytopia/mypy:$(MYPY_VERSION) -c ' \
@@ -224,7 +224,7 @@ test:
 	@echo "Check Python package"
 	docker run \
 		--rm \
-    --network=host \
+		--network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -249,42 +249,49 @@ _build-source_dist:
 	@echo "Create source distribution"
 	docker run \
 		--rm \
+		--network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
 		-u $$(id -u):$$(id -g) \
+		-e HOME=/tmp \
 		python:$(PYTHON_VERSION)-alpine \
-		python setup.py sdist
+		sh -c "python -m pip install --upgrade pip build && python -m build --sdist"
 
 .PHONY: _build_binary_dist
 _build-binary_dist:
 	@echo "Create binary distribution"
 	docker run \
 		--rm \
+		--network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
 		-u $$(id -u):$$(id -g) \
+		-e HOME=/tmp \
 		python:$(PYTHON_VERSION)-alpine \
-		python setup.py bdist_wheel --universal
+		sh -c "python -m pip install --upgrade pip build && python -m build --wheel"
 
 .PHONY: _build_python_package
 _build-python_package:
-	@echo "Build Python package"
+	@echo "Build Python package (sdist + wheel)"
 	docker run \
 		--rm \
+		--network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
 		-u $$(id -u):$$(id -g) \
+		-e HOME=/tmp \
 		python:$(PYTHON_VERSION)-alpine \
-		python setup.py build
+		sh -c "python -m pip install --upgrade pip build && python -m build"
 
 .PHONY: _build_check_python_package
 _build-check_python_package:
 	@echo "Check Python package"
 	docker run \
 		--rm \
+		--network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -293,18 +300,18 @@ _build-check_python_package:
 		&& twine check dist/*"
 
 clean:
-	rm -rf build/
-	rm -rf dist/
-	rm -rf $(NAME).egg-info
-	find . -type f -name '*.pyc' -exec rm -f {} \;
-	find . -type d -name '__pycache__' -prune -exec rmdir {} \;
+	- rm -rf build/
+	- rm -rf dist/
+	- rm -rf $(NAME).egg-info
+	- find . -type f -name '*.pyc' -exec rm -f {} \; || true
+	- find . -type d -name '__pycache__' -prune -exec rmdir {} \; || true
 
 .PHONY: venv
 venv:
 	python3 -m venv $(VENV)
 	@echo source $(VENV)/bin/activate
-	@echo python3 setup.py install
-
+	@echo python -m pip install --upgrade pip build
+	@echo python -m build
 
 # -------------------------------------------------------------------------------------------------
 # Publish Targets
@@ -312,6 +319,7 @@ venv:
 deploy: _build-check_python_package
 	docker run \
 		--rm \
+		--network=host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -330,6 +338,7 @@ docker-login:
 
 docker-build:
 	docker build $(NO_CACHE) \
+	  --network=host \
 		--label "org.opencontainers.image.created"="$$(date --rfc-3339=s)" \
 		--label "org.opencontainers.image.revision"="$$(git rev-parse HEAD)" \
 		--label "org.opencontainers.image.version"="${VERSION}" \

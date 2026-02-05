@@ -1,9 +1,15 @@
-FROM python:3.12-alpine3.20 as builder
+FROM python:3.12-alpine3.20 AS builder
+
+# Ensure pip, setuptools, wheel and build are available for building and installing the package
+RUN set -eux \
+    && python -m ensurepip --upgrade \
+    && python -m pip install --no-cache-dir --upgrade pip setuptools wheel build
 
 COPY ./ /data
 RUN set -eux \
 	&& cd /data \
-	&& python setup.py install \
+	&& python -m build \
+	&& python -m pip install --no-cache-dir dist/*.whl \
 	\
 	&& pagey --version | grep -E '^pagey.+?[.0-9]{5}' \
 	\
@@ -12,7 +18,7 @@ RUN set -eux \
 
 
 # 3.20 uses Python 3.12 as default
-FROM alpine:3.20 as production
+FROM alpine:3.20 AS production
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 #LABEL "org.opencontainers.image.created"=""
 #LABEL "org.opencontainers.image.version"=""
