@@ -28,7 +28,7 @@ jobs:
     name: "[${{ matrix.version }}]"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Build source distribution
         run: |
