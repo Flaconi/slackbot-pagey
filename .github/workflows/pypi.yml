@@ -27,7 +27,7 @@ jobs:
 
       - name: Build distributions
         shell: bash -l {0}
-        run: python setup.py sdist bdist_wheel
+        run: python -m build
 
       # Only on git Tag in our own repository
       - name: Publish package to PyPI
