@@ -49,25 +49,26 @@ def main() -> None:
                 users.sort(key=lambda s: s["level"])
                 for user in users:
                     if int(user["level"]) == 1:
-                        response += (
-                            f"* [lvl: *{user['level']}* -> {user['until']}] *{user['name']}*\n"
-                        )
+                        response += f"* [lvl: *{user['level']}* -> {user['until']}] *{user['name']}*\n"
                     else:
-                        response += (
-                            f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
-                        )
+                        response += f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
                 response += "\n"
             return response
         # [Command: info] Report some info
         if command.startswith("info"):
-            return f"{DEF_NAME} ({DEF_VERSION}) - {DEF_DESC}\nFind me here: {DEF_GITHUB}\n"
+            return (
+                f"{DEF_NAME} ({DEF_VERSION}) - {DEF_DESC}\nFind me here: {DEF_GITHUB}\n"
+            )
 
         return "Available commands: " + ", ".join(COMMANDS)
 
     # Connect to Slack (RTM mode)
     slack = PageySlack(SLACK_TOKEN, commandCallback)
     if not slack.connect():
-        print("Connection to Slack failed. Exception traceback printed above.", file=sys.stderr)
+        print(
+            "Connection to Slack failed. Exception traceback printed above.",
+            file=sys.stderr,
+        )
         sys.exit(1)
     print("Pagey connected to Slack and running!")
     slack.run()

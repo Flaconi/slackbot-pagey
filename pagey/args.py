@@ -8,9 +8,7 @@ from .defaults import DEF_NAME, DEF_DESC, DEF_VERSION, DEF_GITHUB
 def _get_version() -> str:
     """Return version information."""
     return """%(prog)s: Version %(version)s
-(%(url)s)""" % (
-        {"prog": DEF_NAME, "version": DEF_VERSION, "url": DEF_GITHUB}
-    )
+(%(url)s)""" % ({"prog": DEF_NAME, "version": DEF_VERSION, "url": DEF_GITHUB})
 
 
 def get_args() -> argparse.Namespace:
@@ -18,7 +16,9 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         add_help=False,
-        usage=(f"{DEF_NAME} [option]\n" f"{DEF_NAME} -v, --version\n" f"{DEF_NAME} -h, --help\n"),
+        usage=(
+            f"{DEF_NAME} [option]\n{DEF_NAME} -v, --version\n{DEF_NAME} -h, --help\n"
+        ),
         description=DEF_DESC
         + """
 
@@ -40,7 +40,9 @@ IMPORTANT:
         version=_get_version(),
         help="Show version information and exit.",
     )
-    misc.add_argument("-h", "--help", action="help", help="Show this help message and exit.")
+    misc.add_argument(
+        "-h", "--help", action="help", help="Show this help message and exit."
+    )
 
     # Return arguments
     return parser.parse_args()

@@ -69,7 +69,9 @@ class PageySlack:
         return None, None
 
     @staticmethod
-    def __parse_direct_mention(message_text: str) -> Tuple[Optional[str], Optional[str]]:
+    def __parse_direct_mention(
+        message_text: str,
+    ) -> Tuple[Optional[str], Optional[str]]:
         """Parse mentions.
 
         Finds a direct mention (a mention that is at the beginning) in message text
