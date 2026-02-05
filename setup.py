@@ -48,8 +48,6 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
         "Intended Audience :: System Administrators",
-        # License
-        "License :: OSI Approved :: MIT License",
         # Where does it run
         "Operating System :: OS Independent",
         # Specify the Python versions you support here. In particular, ensure
