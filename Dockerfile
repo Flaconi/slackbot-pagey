@@ -1,5 +1,10 @@
 FROM python:3.12-alpine3.20 as builder
 
+# Ensure pip, setuptools and wheel are available for running setup.py
+RUN set -eux \
+    && apk add --no-cache py3-pip \
+    && pip install --no-cache-dir --upgrade pip setuptools wheel
+
 COPY ./ /data
 RUN set -eux \
 	&& cd /data \

@@ -249,6 +249,7 @@ _build-source_dist:
 	@echo "Create source distribution"
 	docker run \
 		--rm \
+	  --network host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -261,6 +262,7 @@ _build-binary_dist:
 	@echo "Create binary distribution"
 	docker run \
 		--rm \
+	  --network host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -273,6 +275,7 @@ _build-python_package:
 	@echo "Build Python package"
 	docker run \
 		--rm \
+	  --network host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -285,6 +288,7 @@ _build-check_python_package:
 	@echo "Check Python package"
 	docker run \
 		--rm \
+		--network host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -312,6 +316,7 @@ venv:
 deploy: _build-check_python_package
 	docker run \
 		--rm \
+	  --network host \
 		$$(tty -s && echo "-it" || echo) \
 		-v $(PWD):/data \
 		-w /data \
@@ -330,6 +335,7 @@ docker-login:
 
 docker-build:
 	docker build $(NO_CACHE) \
+	  --network host \
 		--label "org.opencontainers.image.created"="$$(date --rfc-3339=s)" \
 		--label "org.opencontainers.image.revision"="$$(git rev-parse HEAD)" \
 		--label "org.opencontainers.image.version"="${VERSION}" \
