@@ -21,7 +21,7 @@ class PageyPD:
     # --------------------------------------------------------------------------
     # Public Functions
     # --------------------------------------------------------------------------
-    def get_schedules(self) -> Dict[str, Any]:
+    def get_schedules(self) -> dict[str, Any]:
         """Fetch oncall schedules from Pagerduty API."""
         url = "https://api.pagerduty.com/oncalls"
         now = datetime.datetime.now()
@@ -50,7 +50,7 @@ class PageyPD:
     # --------------------------------------------------------------------------
     # Private Functions
     # --------------------------------------------------------------------------
-    def __get_api_response(self, url: str, ret_key: str) -> List[Dict[str, Any]]:
+    def __get_api_response(self, url: str, ret_key: str) -> list[dict[str, Any]]:
         """Make generic GET requests against Pagerduty API and return its response.
 
         Args:

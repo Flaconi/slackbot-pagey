@@ -1,6 +1,7 @@
 """Slack module."""
 
-from typing import Tuple, Optional, List, Dict, Any, Callable
+from typing import Tuple, Optional, List, Dict, Any
+from collections.abc import Callable
 import time
 import re
 import sys
@@ -44,7 +45,7 @@ class PageySlack:
     # --------------------------------------------------------------------------
     # Private Functions
     # --------------------------------------------------------------------------
-    def __handle_command(self, command: str, channel: Optional[str]) -> None:
+    def __handle_command(self, command: str, channel: str | None) -> None:
         """Executes bot command if the command is known."""
         # The callback will take care about setting the response for slack
         response = self.__commandCallback(command)
@@ -53,8 +54,8 @@ class PageySlack:
         self.__slack.api_call("chat.postMessage", channel=channel, text=response)
 
     def __parse_bot_commands(
-        self, slack_events: List[Dict[str, Any]]
-    ) -> Tuple[Optional[str], Optional[str]]:
+        self, slack_events: list[dict[str, Any]]
+    ) -> tuple[str | None, str | None]:
         """Parse commands.
 
         Parses a list of events coming from the Slack RTM API to find bot commands.
@@ -71,7 +72,7 @@ class PageySlack:
     @staticmethod
     def __parse_direct_mention(
         message_text: str,
-    ) -> Tuple[Optional[str], Optional[str]]:
+    ) -> tuple[str | None, str | None]:
         """Parse mentions.
 
         Finds a direct mention (a mention that is at the beginning) in message text
