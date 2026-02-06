@@ -1,6 +1,6 @@
 """Pagerduty module."""
 
-from typing import List, Dict, Any
+from typing import Any
 import datetime
 import json
 import sys
@@ -13,7 +13,7 @@ class PageyPD:
     """Pagey PagerDuty Class."""
 
     # --------------------------------------------------------------------------
-    # Contrcutor
+    # Constructor
     # --------------------------------------------------------------------------
     def __init__(self, token: str) -> None:
         self.__token = token
@@ -25,7 +25,7 @@ class PageyPD:
         """Fetch oncall schedules from Pagerduty API."""
         url = "https://api.pagerduty.com/oncalls"
         now = datetime.datetime.now()
-        data = {}  # type: Dict[str, Any]
+        data: dict[str, Any] = {}
 
         for item in self.__get_api_response(url, "oncalls"):
             if item["start"] and item["end"]:
@@ -54,11 +54,11 @@ class PageyPD:
         """Make generic GET requests against Pagerduty API and return its response.
 
         Args:
-            url (str): API URL to request against.
-            ret_key (str): The top-level JSON key for which to return its childs.
+            url: API URL to request against.
+            ret_key: The top-level JSON key for which to return its children.
 
         Returns:
-            list: Returns list of response dicts.
+            A list of response dicts.
         """
         # Required request headers for PD APIv2
         headers = {
@@ -66,10 +66,10 @@ class PageyPD:
             "Content-Type": "application/json",
             "Authorization": f"Token token={self.__token}",
         }
-        params = {}
+        params: dict[str, Any] = {}
         limit = 20
         offset = 0
-        data = []  # type: List[Dict[str, Any]]
+        data: list[dict[str, Any]] = []
 
         while True:
             params = {

@@ -1,11 +1,12 @@
 """Main file for pagey."""
 
 import os
+import sys
 
-from .args import *
-from .pagerduty import *
-from .defaults import DEF_NAME, DEF_DESC, DEF_VERSION, DEF_GITHUB
-from .slack import *
+from .args import get_args
+from .defaults import DEF_DESC, DEF_GITHUB, DEF_NAME, DEF_VERSION
+from .pagerduty import PageyPD
+from .slack import PageySlack
 
 COMMANDS = ["oncall", "info"]
 
@@ -17,28 +18,29 @@ def main() -> None:
 
     # Ensure environment tokens are present
     try:
-        SLACK_TOKEN = os.environ["PAGEY_SLACK_TOKEN"]
+        slack_token = os.environ["PAGEY_SLACK_TOKEN"]
     except KeyError:
         print("Error, env variable 'PAGEY_SLACK_TOKEN' not set", file=sys.stderr)
         sys.exit(1)
     try:
-        PD_TOKEN = os.environ["PAGEY_PD_TOKEN"]
+        pd_token = os.environ["PAGEY_PD_TOKEN"]
     except KeyError:
         print("Error, env variable 'PAGEY_PD_TOKEN' not set", file=sys.stderr)
         sys.exit(1)
 
     # Initialize Pagerduty module
-    pagerduty = PageyPD(PD_TOKEN)
+    pagerduty = PageyPD(pd_token)
 
-    def commandCallback(command: str) -> str:
-        """This is a callback function for Slack to evaluate response based on given command.
+    def command_callback(command: str) -> str:
+        """Callback for Slack to evaluate response based on the given command.
 
         Args:
-            command (str): the command/message after the bot mention (e.g.: @pagey <command>).
+            command: The command/message after the bot mention (e.g.: @pagey <command>).
 
         Returns:
-            str: The reply to be sent to Slack.
+            The reply to be sent to Slack.
         """
+
         # [Command: oncall] Get Pagerduty schedules
         if command.startswith("oncall"):
             schedules = pagerduty.get_schedules()
@@ -49,11 +51,18 @@ def main() -> None:
                 users.sort(key=lambda s: s["level"])
                 for user in users:
                     if int(user["level"]) == 1:
-                        response += f"* [lvl: *{user['level']}* -> {user['until']}] *{user['name']}*\n"
+                        response += (
+                            f"* [lvl: *{user['level']}* -> {user['until']}] "
+                            f"*{user['name']}*\n"
+                        )
                     else:
-                        response += f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
+                        response += (
+                            f"* [lvl: *{user['level']}* -> {user['until']}] "
+                            f"{user['name']}\n"
+                        )
                 response += "\n"
             return response
+
         # [Command: info] Report some info
         if command.startswith("info"):
             return (
@@ -63,7 +72,7 @@ def main() -> None:
         return "Available commands: " + ", ".join(COMMANDS)
 
     # Connect to Slack (RTM mode)
-    slack = PageySlack(SLACK_TOKEN, commandCallback)
+    slack = PageySlack(slack_token, command_callback)
     if not slack.connect():
         print(
             "Connection to Slack failed. Exception traceback printed above.",
