@@ -38,15 +38,14 @@ RUN set -eux \
 	&& adduser -h /home/pagey -s /bin/sh -u 1000 -G pagey -D pagey
 
 RUN set -eux \
-	&& apk add --no-cache python3 \
-	&& ln -sf /usr/bin/python3 /usr/bin/python \
-	&& ln -sf /usr/bin/python3 /usr/local/bin/python \
+	&& ln -sf /usr/local/bin/python3 /usr/bin/python \
+	&& ln -sf /usr/local/bin/python3 /usr/local/bin/python \
 	\
 	&& find /usr/lib/ -name '*.pyc' -print0 | xargs -0 -n1 rm -f \
 	&& find /usr/lib/ -name '__pycache__' -print0 | xargs -0 -n1 rm -rf
 
-COPY --from=builder /usr/local/lib/python3.14/site-packages/ /usr/lib/python3.14/site-packages/
-COPY --from=builder /usr/local/bin/pagey /usr/bin/pagey
+COPY --from=builder /usr/local/lib/python3.14/site-packages/ /usr/local/lib/python3.14/site-packages/
+COPY --from=builder /usr/local/bin/pagey /usr/local/bin/pagey
 
 USER pagey
 ENTRYPOINT ["pagey"]
