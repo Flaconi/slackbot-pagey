@@ -40,7 +40,6 @@ def main() -> None:
         Returns:
             The reply to be sent to Slack.
         """
-
         # [Command: oncall] Get Pagerduty schedules
         if command.startswith("oncall"):
             schedules = pagerduty.get_schedules()
@@ -52,22 +51,18 @@ def main() -> None:
                 for user in users:
                     if int(user["level"]) == 1:
                         response += (
-                            f"* [lvl: *{user['level']}* -> {user['until']}] "
-                            f"*{user['name']}*\n"
+                            f"* [lvl: *{user['level']}* -> {user['until']}] *{user['name']}*\n"
                         )
                     else:
                         response += (
-                            f"* [lvl: *{user['level']}* -> {user['until']}] "
-                            f"{user['name']}\n"
+                            f"* [lvl: *{user['level']}* -> {user['until']}] {user['name']}\n"
                         )
                 response += "\n"
             return response
 
         # [Command: info] Report some info
         if command.startswith("info"):
-            return (
-                f"{DEF_NAME} ({DEF_VERSION}) - {DEF_DESC}\nFind me here: {DEF_GITHUB}\n"
-            )
+            return f"{DEF_NAME} ({DEF_VERSION}) - {DEF_DESC}\nFind me here: {DEF_GITHUB}\n"
 
         return "Available commands: " + ", ".join(COMMANDS)
 

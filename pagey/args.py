@@ -15,9 +15,7 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         add_help=False,
-        usage=(
-            f"{DEF_NAME} [option]\n{DEF_NAME} -v, --version\n{DEF_NAME} -h, --help\n"
-        ),
+        usage=(f"{DEF_NAME} [option]\n{DEF_NAME} -v, --version\n{DEF_NAME} -h, --help\n"),
         description=DEF_DESC
         + """
 
@@ -39,9 +37,7 @@ IMPORTANT:
         version=_get_version(),
         help="Show version information and exit.",
     )
-    misc.add_argument(
-        "-h", "--help", action="help", help="Show this help message and exit."
-    )
+    misc.add_argument("-h", "--help", action="help", help="Show this help message and exit.")
 
     # Return arguments
     return parser.parse_args()
