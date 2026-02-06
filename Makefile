@@ -157,6 +157,7 @@ code: _code-pylint
 code: _code-black
 code: _code-mypy
 code: _code-bandit
+code: _code-ruff
 
 .PHONY: _code-pycodestyle
 _code-pycodestyle:
@@ -215,6 +216,21 @@ _code-mypy:
       && mypy --config-file setup.cfg $(SRC)/ \
       '
 
+.PHONY: _code-ruff
+_code-ruff:
+	@echo "# -------------------------------------------------------------------- #"
+	@echo "# Check ruff"
+	@echo "# -------------------------------------------------------------------- #"
+	docker run --rm $$(tty -s && echo "-it" || echo) \
+		--network=host \
+	  -v ${PWD}:/data \
+		-w /data \
+	  --entrypoint=sh \
+	  python:$(PYTHON_VERSION)-alpine -c ' \
+      python -m pip install ruff \
+      && ruff check --diff \
+      && ruff format --diff \
+      '
 
 # -------------------------------------------------------------------------------------------------
 # Test Targets
