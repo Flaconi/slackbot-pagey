@@ -3,10 +3,10 @@
 
 from setuptools import setup
 
-with open("README.md", "r") as fp:
+with open("README.md") as fp:
     long_description = fp.read()
 
-with open("requirements.txt", "r") as fp:
+with open("requirements.txt") as fp:
     requirements = fp.read()
 
 setup(

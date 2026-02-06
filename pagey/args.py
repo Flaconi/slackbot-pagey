@@ -2,15 +2,12 @@
 
 import argparse
 
-from .defaults import DEF_NAME, DEF_DESC, DEF_VERSION, DEF_GITHUB
+from .defaults import DEF_DESC, DEF_GITHUB, DEF_NAME, DEF_VERSION
 
 
 def _get_version() -> str:
     """Return version information."""
-    return """%(prog)s: Version %(version)s
-(%(url)s)""" % (
-        {"prog": DEF_NAME, "version": DEF_VERSION, "url": DEF_GITHUB}
-    )
+    return f"{DEF_NAME}: Version {DEF_VERSION}\n({DEF_GITHUB})"
 
 
 def get_args() -> argparse.Namespace:
@@ -18,7 +15,7 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         add_help=False,
-        usage=(f"{DEF_NAME} [option]\n" f"{DEF_NAME} -v, --version\n" f"{DEF_NAME} -h, --help\n"),
+        usage=(f"{DEF_NAME} [option]\n{DEF_NAME} -v, --version\n{DEF_NAME} -h, --help\n"),
         description=DEF_DESC
         + """
 
