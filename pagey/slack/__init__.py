@@ -1,11 +1,16 @@
 """Slack module."""
 
 from collections.abc import Callable
+import logging
 import re
 import time
 from typing import Any
 
-from slackclient import SlackClient  # type: ignore
+from slack import WebClient, RTMClient
+from slack.errors import SlackApiError
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class PageySlack:
@@ -18,7 +23,8 @@ class PageySlack:
     # --------------------------------------------------------------------------
     def __init__(self, token: str, command_callback: Callable[[str], str]) -> None:
         """Initialize Slack client and command callback."""
-        self._slack = SlackClient(token)
+        self._slack = WebClient(token=token)
+        self._rtm_client = RTMClient(token=token, run_async=False)
         self._bot_id: str | None = None
         self._command_callback = command_callback
 
@@ -27,20 +33,38 @@ class PageySlack:
     # --------------------------------------------------------------------------
     def connect(self) -> bool:
         """Connect to Slack and return True on success, otherwise False."""
-        if self._slack.rtm_connect(with_team_state=False):
-            # Read bot's user ID by calling Web API method `auth.test`.
-            auth_response = self._slack.api_call("auth.test")
-            self._bot_id = auth_response["user_id"]
-            return True
-        return False
+        try:
+            # Read bot's user ID by calling Web API method `auth_test`.
+            _, auth_response = self._slack.auth_test()
+        except SlackApiError as exc:
+            error = exc.response.get("error", "unknown_error")
+            LOGGER.error("Slack auth_test failed: %s", error)
+            return False
+
+        self._bot_id = auth_response.get("user_id")
+        return self._bot_id is not None
 
     def run(self) -> None:
-        """Run this Slack bot and endlessly evaluate Slack events."""
-        while True:
-            command, channel = self._parse_bot_commands(self._slack.rtm_read())
-            if command and channel:
+        """Run this Slack bot and endlessly evaluate Slack events using RTMClient."""
+
+        @RTMClient.run_on(event="message")  # type: ignore[misc]
+        def _on_message(**payload: Any) -> None:
+            data = payload.get("data", {})
+            channel = data.get("channel")
+            text = data.get("text", "")
+
+            if not channel or not text:
+                return
+
+            command, _ = self._parse_bot_commands([data])
+            if command is not None:
                 self._handle_command(command, channel)
-            time.sleep(self.RTM_READ_DELAY)
+
+        # Start the RTM event loop (blocking call).
+        self._rtm_client.start()
+
+        # Small sleep to avoid tight loop restarts if ever changed.
+        time.sleep(self.RTM_READ_DELAY)
 
     # --------------------------------------------------------------------------
     # Private Functions
@@ -51,7 +75,7 @@ class PageySlack:
         response = self._command_callback(command)
 
         # Send the response back to the channel.
-        self._slack.api_call("chat.postMessage", channel=channel, text=response)
+        self._slack.chat_postMessage(channel=channel, text=response)
 
     def _parse_bot_commands(
         self,
