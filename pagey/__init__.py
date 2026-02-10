@@ -67,15 +67,22 @@ def main() -> None:
         return "Available commands: " + ", ".join(COMMANDS)
 
     # Connect to Slack (RTM mode)
-    slack = PageySlack(slack_token, command_callback)
-    if not slack.connect():
+    pagey = PageySlack(slack_token, command_callback)
+    if not pagey.connect():
         print(
             "Connection to Slack failed. Exception traceback printed above.",
             file=sys.stderr,
         )
         sys.exit(1)
     print("Pagey connected to Slack and running!")
-    slack.run()
+    try:
+        pagey.run()
+    except KeyboardInterrupt:
+        print(
+            "Pagey Slack bot stopped by user.",
+            file=sys.stdout,
+        )
+        sys.exit(0)
 
 
 if __name__ == "__main__":

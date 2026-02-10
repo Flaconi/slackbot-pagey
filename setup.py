@@ -11,7 +11,7 @@ with open("requirements.txt") as fp:
 
 setup(
     name="pagey",
-    version="0.4.0",
+    version="0.5.0",
     packages=[
         "pagey",
         "pagey.pagerduty",
@@ -41,7 +41,7 @@ setup(
         # https://pypi.org/classifiers/
         #
         # How mature is this project
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         # How does it run
         "Environment :: Console",
         # Indicate who your project is intended for
