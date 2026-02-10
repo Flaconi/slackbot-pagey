@@ -4,9 +4,10 @@ import logging
 import re
 from collections.abc import Callable
 from typing import Any
+
 from slack_sdk import WebClient
-from slack_sdk.rtm_v2 import RTMClient
 from slack_sdk.errors import SlackApiError
+from slack_sdk.rtm_v2 import RTMClient
 
 
 LOGGER = logging.getLogger(__name__)
@@ -46,14 +47,14 @@ class PageySlack:
         """Run this Slack bot and endlessly evaluate Slack events using RTMClient."""
 
         @self._rtm_client.on("message")
-        def _on_message(_: RTMClient, event: dict) -> None:
+        def _on_message(_: RTMClient, event: dict[str, Any]) -> None:
             channel = event.get("channel")
             text = event.get("text", "")
 
             if not channel or not text:
                 return
 
-            command, _ = self._parse_bot_commands([event])
+            command = self._parse_bot_commands([event])
             if command is not None:
                 self._handle_command(command, channel)
 
@@ -74,7 +75,7 @@ class PageySlack:
     def _parse_bot_commands(
         self,
         slack_events: list[dict[str, Any]],
-    ) -> tuple[str | None, str | None]:
+    ) -> str | None:
         """Parse commands from Slack RTM events.
 
         Parses a list of events coming from the Slack RTM API to find bot commands.
@@ -85,8 +86,8 @@ class PageySlack:
             if event.get("type") == "message" and "subtype" not in event:
                 user_id, message = self._parse_direct_mention(event.get("text", ""))
                 if user_id == self._bot_id and message is not None:
-                    return message, event["channel"]
-        return None, None
+                    return message
+        return None
 
     @staticmethod
     def _parse_direct_mention(
