@@ -1,18 +1,25 @@
 """Main file for pagey."""
 
+import logging
 import os
 import sys
 
 from .args import get_args
 from .defaults import DEF_DESC, DEF_GITHUB, DEF_NAME, DEF_VERSION
+from .logging_config import configure_logging
 from .pagerduty import PageyPD
 from .slack import PageySlack
 
 COMMANDS = ["oncall", "info"]
 
 
+LOGGER = logging.getLogger(__name__)
+
+
 def main() -> None:
     """Run main entrypoint."""
+    configure_logging()
+
     # Parse command line arguments
     get_args()
 
@@ -20,12 +27,13 @@ def main() -> None:
     try:
         slack_token = os.environ["PAGEY_SLACK_TOKEN"]
     except KeyError:
-        print("Error, env variable 'PAGEY_SLACK_TOKEN' not set", file=sys.stderr)
+        LOGGER.error("Env variable PAGEY_SLACK_TOKEN is not set")
         sys.exit(1)
+
     try:
         pd_token = os.environ["PAGEY_PD_TOKEN"]
     except KeyError:
-        print("Error, env variable 'PAGEY_PD_TOKEN' not set", file=sys.stderr)
+        LOGGER.error("Env variable PAGEY_PD_TOKEN is not set")
         sys.exit(1)
 
     # Initialize Pagerduty module
@@ -69,19 +77,15 @@ def main() -> None:
     # Connect to Slack (RTM mode)
     pagey = PageySlack(slack_token, command_callback)
     if not pagey.connect():
-        print(
-            "Connection to Slack failed. Exception traceback printed above.",
-            file=sys.stderr,
-        )
+        LOGGER.error("Connection to Slack failed")
         sys.exit(1)
-    print("Pagey connected to Slack and running!")
+
+    LOGGER.info("Pagey connected to Slack and running!")
+
     try:
         pagey.run()
     except KeyboardInterrupt:
-        print(
-            "Pagey Slack bot stopped by user.",
-            file=sys.stdout,
-        )
+        LOGGER.info("Pagey Slack bot stopped by user")
         sys.exit(0)
 
 

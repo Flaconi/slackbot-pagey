@@ -40,6 +40,9 @@ pip install pagey
 export PAGEY_SLACK_TOKEN="read-write slack token"
 export PAGEY_PD_TOKEN="read-only pagerduty token"
 
+# Optional: configure logging verbosity (default: INFO)
+export PAGEY_LOG_LEVEL=DEBUG
+
 # Run it
 pagey
 ```
@@ -58,8 +61,11 @@ Docker image is available here:
 export PAGEY_SLACK_TOKEN="read-write slack token"
 export PAGEY_PD_TOKEN="read-only pagerduty token"
 
+# Optional: configure logging verbosity (default: INFO)
+export PAGEY_LOG_LEVEL=DEBUG
+
 # Run it
-docker run --rm -d -e PAGEY_SLACK_TOKEN -e PAGEY_PD_TOKEN flaconi/slackbot-pagey
+docker run --rm -d -e PAGEY_SLACK_TOKEN -e PAGEY_PD_TOKEN -e PAGEY_LOG_LEVEL flaconi/slackbot-pagey
 ```
 
 
