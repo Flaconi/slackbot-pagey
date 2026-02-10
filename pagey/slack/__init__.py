@@ -67,6 +67,7 @@ class PageySlack:
     def _handle_command(self, command: str, channel: str) -> None:
         """Execute a bot command and send the response back to Slack."""
         # The callback will take care of generating the response for Slack.
+        LOGGER.debug("Got '%s' command from '%s' channel", command, channel)
         response = self._command_callback(command)
 
         # Send the response back to the channel.
