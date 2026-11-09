@@ -1,4 +1,4 @@
-FROM python:3.14-alpine3.23 AS builder
+FROM python:3.15-alpine3.24 AS builder
 
 # Ensure pip, setuptools, wheel and build are available for building and installing the package
 RUN set -eux \
@@ -17,7 +17,7 @@ RUN set -eux \
 	&& find /usr/lib/ -name '*.pyc' -print0 | xargs -0 -n1 rm -rf
 
 
-FROM python:3.14-alpine3.23 AS production
+FROM python:3.15-alpine3.24 AS production
 # https://github.com/opencontainers/image-spec/blob/master/annotations.md
 #LABEL "org.opencontainers.image.created"=""
 #LABEL "org.opencontainers.image.version"=""
