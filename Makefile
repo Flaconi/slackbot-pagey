@@ -7,9 +7,8 @@ endif
 # Can be changed
 # -------------------------------------------------------------------------------------------------
 # This can be adjusted
-PYTHON_VERSION = 3.14
+PYTHON_VERSION = 3.15
 PYLINT_VERSION = latest-0.8
-MYPY_VERSION   = latest-py3.10
 
 # -------------------------------------------------------------------------------------------------
 # Default configuration
@@ -209,10 +208,11 @@ _code-mypy:
 	docker run --rm $$(tty -s && echo "-it" || echo) \
 		--network=host \
 	  -v ${PWD}:/data \
+		-w /data \
 	  --entrypoint=sh \
-	  cytopia/mypy:$(MYPY_VERSION) -c ' \
+		python:$(PYTHON_VERSION)-alpine -c ' \
       python -m pip install -r requirements.txt \
-      && python -m pip install types-python-dateutil types-requests \
+      && python -m pip install mypy types-python-dateutil types-requests \
       && mypy --config-file setup.cfg $(SRC)/ \
       '
 

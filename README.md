@@ -31,7 +31,7 @@
 pip install pagey
 ```
 
-> :exclamation: Requires Python >= 3.10
+> :exclamation: Requires Python >= 3.11
 
 
 ## :computer: Usage
